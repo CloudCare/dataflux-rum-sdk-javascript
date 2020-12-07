@@ -34,7 +34,9 @@ export function startRumAssembly(
             sdkName: configuration.sdkName,
             sdkVersion: configuration.sdkVersion,
             service: configuration.service,
-            env: configuration.env
+            env: configuration.env,
+            version: configuration.version,
+            tags: configuration.tags
           },
           application: {
             id: applicationId

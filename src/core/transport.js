@@ -1,6 +1,15 @@
-import { jsonStringify, addEventListener, values } from '../helper/tools'
+import {
+  jsonStringify,
+  addEventListener,
+  values,
+  findByPath,
+  safeJSONParse,
+  map,
+  msToNs,
+  each
+} from '../helper/tools'
 import { DOM_EVENT } from '../helper/enums'
-
+import dataMap from './dataMap'
 // https://en.wikipedia.org/wiki/UTF-8
 var HAS_MULTI_BYTES_CHARACTERS = /[^\u0000-\u007F]/
 function addBatchTime(url) {
@@ -69,9 +78,8 @@ batch.prototype = {
   flush: function () {
     if (this.bufferMessageCount !== 0) {
       var messages = this.pushOnlyBuffer.concat(values(this.upsertBuffer))
-      messages.forEach(function (message) {
-        console.log(JSON.parse(message))
-      })
+      messages = this.batchProcessSendData(messages)
+      console.log(messages, 'messages')
       this.request.send(messages.join('\n'), this.bufferBytesSize)
       this.pushOnlyBuffer = []
       this.upsertBuffer = {}
@@ -79,7 +87,55 @@ batch.prototype = {
       this.bufferMessageCount = 0
     }
   },
-
+  batchProcessSendData: function (messages) {
+    var _this = this
+    return map(messages, function (message) {
+      return _this.processSendData(message)
+    })
+  },
+  processSendData: function (message) {
+    var data = safeJSONParse(message)
+    if (!data || !data.type) return []
+    var rowsStr = []
+    each(dataMap, function (value, key) {
+      if (value.type === data.type) {
+        var rowStr = ''
+        rowStr += key + ','
+        var tagsStr = []
+        each(value.tags, function (value_path, _key) {
+          var _value = findByPath(data, value_path)
+          if (_value) {
+            tagsStr.push(_key + '=' + _value)
+          }
+        })
+        if (data.tags.length) {
+          // 自定义tag
+          each(data.tags, function (_value, _key) {
+            if (_value) {
+              tagsStr.push(_key + '=' + _value)
+            }
+          })
+        }
+        var fieldsStr = []
+        each(value.fields, function (value_path, _key) {
+          var _value = findByPath(data, value_path)
+          if (_value) {
+            fieldsStr.push(_key + '=' + _value)
+          }
+        })
+        if (tagsStr.length) {
+          rowStr += tagsStr.join(',')
+        }
+        if (fieldsStr.length) {
+          rowStr += ' '
+          rowStr += fieldsStr.join(',')
+        }
+        rowStr + ' ' + msToNs(data.date)
+        rowsStr.push(rowStr)
+      }
+    })
+    return rowsStr.join('\n')
+  },
   sizeInBytes: function (candidate) {
     // Accurate byte size computations can degrade performances when there is a lot of events to process
     if (!HAS_MULTI_BYTES_CHARACTERS.test(candidate)) {
@@ -114,7 +170,6 @@ batch.prototype = {
       this.flush()
     }
   },
-
   process: function (message) {
     var processedMessage = jsonStringify(message)
     var messageBytesSize = this.sizeInBytes(processedMessage)

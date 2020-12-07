@@ -1412,7 +1412,18 @@ export function findCommaSeparatedValue(rawString, name) {
   var matches = rawString.match('(?:^|;)\\s*' + name + '\\s*=\\s*([^;]+)')
   return matches ? matches[1] : undefined
 }
-
+export function findByPath(source, path) {
+  var pathArr = path.split('.')
+  while (pathArr.length) {
+    var key = pathArr.shift()
+    if (key in source && hasOwnProperty.call(source, key)) {
+      source = source[key]
+    } else {
+      return undefined
+    }
+  }
+  return source
+}
 export function safeTruncate(candidate, length) {
   var lastChar = candidate.charCodeAt(length - 1)
   // check if it is the high part of a surrogate pair

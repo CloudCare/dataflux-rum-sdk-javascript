@@ -87,8 +87,6 @@ function retrieveActiveSession(sessionCookie) {
 }
 
 function isActiveSession(session) {
-  // created and expire can be undefined for versions which was not storing them
-  // these checks could be removed when older versions will not be available/live anymore
   return (
     (session.created === undefined ||
       Date.now() - Number(session.created) < SESSION_TIME_OUT_DELAY) &&
