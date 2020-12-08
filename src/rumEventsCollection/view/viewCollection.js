@@ -30,6 +30,8 @@ function computePerformanceViewDetails(entry) {
   }
   if (responseEnd !== fetchStart) {
     details.fpt = msToNs(responseEnd - fetchStart)
+    var apdexLevel = parseInt((responseEnd - fetchStart) / 1000) // 秒数取整
+    details.apdexLevel = apdexLevel > 9 ? 9 : apdexLevel
   }
   if (domInteractive !== fetchStart) {
     details.tti = msToNs(domInteractive - fetchStart)
