@@ -77,7 +77,7 @@ function proxyXhr() {
         _this._dataflux_xhr.response = _this.response
         _this._dataflux_xhr.status = _this.status
         each(onRequestCompleteCallbacks, function (callback) {
-          callback(_this._dataflux_xhr)
+          callback(_this._dataflux_xhr, _this)
         })
       }
 

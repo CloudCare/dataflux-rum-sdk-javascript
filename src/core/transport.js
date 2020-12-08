@@ -5,32 +5,24 @@ import {
   findByPath,
   safeJSONParse,
   map,
-  msToNs,
+  escapeRowData,
   each
 } from '../helper/tools'
 import { DOM_EVENT } from '../helper/enums'
 import dataMap from './dataMap'
 // https://en.wikipedia.org/wiki/UTF-8
 var HAS_MULTI_BYTES_CHARACTERS = /[^\u0000-\u007F]/
-function addBatchTime(url) {
+function addBatchPrecision(url) {
   if (!url) return url
-  return (
-    url +
-    (url.indexOf('?') === -1 ? '?' : '&') +
-    'batch_time=' +
-    new Date().getTime()
-  )
+  return url + (url.indexOf('?') === -1 ? '?' : '&') + 'precision=ms'
 }
-var httpRequest = function (endpointUrl, bytesLimit, withBatchTime) {
+var httpRequest = function (endpointUrl, bytesLimit) {
   this.endpointUrl = endpointUrl
   this.bytesLimit = bytesLimit
-  this.withBatchTime = withBatchTime || false
 }
 httpRequest.prototype = {
   send: function (data, size) {
-    var url = this.withBatchTime
-      ? addBatchTime(this.endpointUrl)
-      : this.endpointUrl
+    var url = addBatchPrecision(this.endpointUrl)
     if (navigator.sendBeacon && size < this.bytesLimit) {
       var isQueued = navigator.sendBeacon(url, data)
       if (isQueued) {
@@ -39,6 +31,7 @@ httpRequest.prototype = {
     }
     var request = new XMLHttpRequest()
     request.open('POST', url, true)
+    request.withCredentials = true
     request.send(data)
   }
 }
@@ -79,7 +72,6 @@ batch.prototype = {
     if (this.bufferMessageCount !== 0) {
       var messages = this.pushOnlyBuffer.concat(values(this.upsertBuffer))
       messages = this.batchProcessSendData(messages)
-      console.log(messages, 'messages')
       this.request.send(messages.join('\n'), this.bufferBytesSize)
       this.pushOnlyBuffer = []
       this.upsertBuffer = {}
@@ -95,6 +87,7 @@ batch.prototype = {
   },
   processSendData: function (message) {
     var data = safeJSONParse(message)
+    console.log(data, 'message')
     if (!data || !data.type) return []
     var rowsStr = []
     each(dataMap, function (value, key) {
@@ -105,14 +98,14 @@ batch.prototype = {
         each(value.tags, function (value_path, _key) {
           var _value = findByPath(data, value_path)
           if (_value) {
-            tagsStr.push(_key + '=' + _value)
+            tagsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
           }
         })
         if (data.tags.length) {
           // 自定义tag
           each(data.tags, function (_value, _key) {
             if (_value) {
-              tagsStr.push(_key + '=' + _value)
+              tagsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
             }
           })
         }
@@ -120,7 +113,7 @@ batch.prototype = {
         each(value.fields, function (value_path, _key) {
           var _value = findByPath(data, value_path)
           if (_value) {
-            fieldsStr.push(_key + '=' + _value)
+            fieldsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
           }
         })
         if (tagsStr.length) {
@@ -130,7 +123,7 @@ batch.prototype = {
           rowStr += ' '
           rowStr += fieldsStr.join(',')
         }
-        rowStr + ' ' + msToNs(data.date)
+        rowStr = rowStr + ' ' + data.date
         rowsStr.push(rowStr)
       }
     })

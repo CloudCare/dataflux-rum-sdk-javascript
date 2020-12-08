@@ -8,13 +8,14 @@ export default {
       version: '_dd.version',
       sdk_name: '_dd.skd_name',
       sdk_version: '_dd.sdk_version',
-      is_signin: 'user.origin_id',
+      is_signin: 'user.is_signin',
       os: 'device.os',
       os_version: 'device.os_version',
       browser: 'device.browser',
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
-      page_host: 'page.host'
+      page_host: 'page.host',
+      page_apdex_level: 'page.apdex_level'
     },
     fields: {
       page_fmp: 'page.fmp',
@@ -34,23 +35,24 @@ export default {
       version: '_dd.version',
       sdk_name: '_dd.skd_name',
       sdk_version: '_dd.sdk_version',
-      is_signin: 'user.origin_id',
+      is_signin: 'user.is_signin',
       os: 'device.os',
       os_version: 'device.os_version',
       browser: 'device.browser',
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
       page_host: 'page.host',
+      resource_status_group: 'resource.status_group',
       resource_url: 'resource.url',
       resource_url_host: 'resource.url_host',
       resource_url_path: 'resource.url_path',
       resource_type: 'resource.type',
       resource_status: 'resource.status',
       resource_method: 'resource.method',
-      response_connection: 'resource.connection',
-      response_server: 'resource.server',
-      response_content_type: 'resource.content_type',
-      response_content_encoding: 'resource.content_encoding'
+      response_connection: 'resource.response_connection',
+      response_server: 'resource.response_server',
+      response_content_type: 'resource.response_content_type',
+      response_content_encoding: 'resource.response_content_encoding'
     },
     fields: {
       resource_size: 'resource.size',
@@ -101,7 +103,7 @@ export default {
       version: '_dd.version',
       sdk_name: '_dd.skd_name',
       sdk_version: '_dd.sdk_version',
-      is_signin: 'user.origin_id',
+      is_signin: 'user.is_signin',
       os: 'device.os',
       os_version: 'device.os_version',
       browser: 'device.browser',
@@ -113,7 +115,8 @@ export default {
       page_host: 'page.host',
       page_path: 'page.path',
       page_url: 'page.url',
-      page_referer: 'page.referer'
+      page_referer: 'page.referer',
+      page_apdex_level: 'page.apdex_level'
     },
     fields: {
       page_fmp: 'page.fmp',
@@ -133,7 +136,7 @@ export default {
       version: '_dd.version',
       sdk_name: '_dd.skd_name',
       sdk_version: '_dd.sdk_version',
-      is_signin: 'user.origin_id',
+      is_signin: 'user.is_signin',
       os: 'device.os',
       os_version: 'device.os_version',
       browser: 'device.browser',
@@ -151,11 +154,12 @@ export default {
       resource_url_path: 'resource.url_path',
       resource_type: 'resource.type',
       resource_status: 'resource.status',
+      resource_status_group: 'resource.status_group',
       resource_method: 'resource.method',
-      response_connection: 'resource.connection',
-      response_server: 'resource.server',
-      response_content_type: 'resource.content_type',
-      response_content_encoding: 'resource.content_encoding'
+      response_connection: 'resource.response_connection',
+      response_server: 'resource.response_server',
+      response_content_type: 'resource.response_content_type',
+      response_content_encoding: 'resource.response_content_encoding'
     },
     fields: {
       resource_size: 'resouce.size',

@@ -32,6 +32,10 @@ export function buildCookieOptions(userConfiguration) {
 
   return cookieOptions
 }
+function getDataWayUrl(url) {
+  if (url.lastIndexOf('/') === url.length - 1) return url + 'v1/write/rum'
+  return url + '/v1/write/rum'
+}
 export function commonInit(userConfiguration, buildEnv) {
   var transportConfiguration = {
     applicationId: userConfiguration.applicationId,
@@ -39,7 +43,7 @@ export function commonInit(userConfiguration, buildEnv) {
     version: userConfiguration.version || '',
     sdkVersion: buildEnv.sdkVersion,
     sdkName: buildEnv.sdkName,
-    datawayUrl: userConfiguration.datawayUrl,
+    datawayUrl: getDataWayUrl(userConfiguration.datawayUrl),
     service: userConfiguration.service || '',
     tags: userConfiguration.tags || [],
     cookieOptions: buildCookieOptions(userConfiguration)

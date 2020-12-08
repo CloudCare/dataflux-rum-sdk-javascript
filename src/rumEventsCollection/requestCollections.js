@@ -19,20 +19,29 @@ export function trackXhr(lifeCycle, configuration, tracer) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.traceXhr(context, xhr)
       context.requestIndex = getNextRequestIndex()
-
       lifeCycle.notify(LifeCycleEventType.REQUEST_STARTED, {
         requestIndex: context.requestIndex
       })
     }
   })
-  xhrProxy.onRequestComplete(function (context) {
+  xhrProxy.onRequestComplete(function (context, xhr) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.clearTracingIfCancelled(context)
+      var contentTypes =
+        xhr.getResponseHeader('content-type') &&
+        xhr.getResponseHeader('content-type').split(';').length > 1 &&
+        xhr.getResponseHeader('content-type').split(';')
       lifeCycle.notify(LifeCycleEventType.REQUEST_COMPLETED, {
         duration: context.duration,
         method: context.method,
         requestIndex: context.requestIndex,
         response: context.response,
+        responseHeader: xhr.getAllResponseHeaders().replace(/[\n\r]/g, ' '),
+        responseConnection: xhr.getResponseHeader('connection'),
+        responseServer: xhr.getResponseHeader('server'),
+        responseContentType: (contentTypes && contentTypes[0]) || '',
+        responseContentEncoding:
+          (contentTypes && contentTypes[1].replace(/(^\s*)|(\s*$)/g, '')) || '',
         spanId: context.spanId,
         startTime: context.startTime,
         status: context.status,
@@ -44,7 +53,18 @@ export function trackXhr(lifeCycle, configuration, tracer) {
   })
   return xhrProxy
 }
+function getAllFetchResponseHeaders(headers) {
+  if (!headers || !(headers instanceof Headers)) return ''
 
+  var headerArry = []
+  var entries = headers.entries()
+  var next = entries.next()
+  while (next && !next.done) {
+    headerArry.push(next.value.join(':'))
+    next = entries.next()
+  }
+  return headerArry.join(' ')
+}
 export function trackFetch(lifeCycle, configuration, tracer) {
   var fetchProxy = startFetchProxy()
   fetchProxy.beforeSend(function (context) {
@@ -66,6 +86,14 @@ export function trackFetch(lifeCycle, configuration, tracer) {
         requestIndex: context.requestIndex,
         response: context.response,
         responseType: context.responseType,
+        responseHeader: getAllFetchResponseHeaders(context.headers),
+        responseConnection:
+          context.headers && context.headers.get('connection'),
+        responseServer: context.headers && context.headers.get('server'),
+        responseContentType:
+          (context.headers && context.headers.get('content-type')) || '',
+        responseContentEncoding:
+          (context.headers && context.headers.get('content-encode')) || '',
         spanId: context.spanId,
         startTime: context.startTime,
         status: context.status,

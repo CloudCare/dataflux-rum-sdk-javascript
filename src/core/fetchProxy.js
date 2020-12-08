@@ -35,7 +35,6 @@ function proxyFetch() {
   if (!window.fetch) {
     return
   }
-
   originalFetch = window.fetch
 
   // tslint:disable promise-function-async
@@ -53,12 +52,12 @@ function proxyFetch() {
       startTime: startTime,
       url: url
     }
-
     var reportFetch = async function (response) {
       context.duration = performance.now() - context.startTime
 
       if ('stack' in response || response instanceof Error) {
         context.status = 0
+        context.headers = response.headers
         context.response = toStackTraceString(computeStackTrace(response))
         each(onRequestCompleteCallbacks, function (callback) {
           callback(context)
@@ -73,6 +72,7 @@ function proxyFetch() {
         context.response = text
         context.responseType = response.type
         context.status = response.status
+        context.headers = response.headers
         each(onRequestCompleteCallbacks, function (callback) {
           callback(context)
         })

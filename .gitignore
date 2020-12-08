@@ -2,3 +2,4 @@ demo
 dist
 node_modules
 .vscode
+scripts/publish-oss.js

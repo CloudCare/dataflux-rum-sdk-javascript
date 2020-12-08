@@ -42,7 +42,12 @@ export function startResourceCollection(lifeCycle, configuration, session) {
     }
   )
 }
-
+function getStatusGroup(status) {
+  if (!status) return status
+  return (
+    String(status).substr(0, 1) + String(status).substr(1).replace(/\d*/g, 'x')
+  )
+}
 function processRequest(request) {
   var type =
     request.type === RequestType.XHR ? ResourceType.XHR : ResourceType.FETCH
@@ -62,9 +67,15 @@ function processRequest(request) {
         load: msToNs(request.duration),
         method: request.method,
         status: request.status,
+        statusGroup: getStatusGroup(request.status),
         url: request.url,
         urlHost: urlObj.Host,
-        urlPath: urlObj.Path
+        urlPath: urlObj.Path,
+        responseHeader: request.responseHeader,
+        responseConnection: request.responseConnection,
+        responseServer: request.responseServer,
+        responseContentType: request.responseContentType,
+        responseContentEncoding: request.responseContentEncoding
       },
       type: RumEventType.RESOURCE
     },
@@ -86,7 +97,9 @@ function processResourceEntry(entry) {
         type: type,
         url: entry.name,
         urlHost: urlObj.Host,
-        urlPath: urlObj.Path
+        urlPath: urlObj.Path,
+        status: 200,
+        statusGroup: getStatusGroup(200)
       },
       type: RumEventType.RESOURCE
     },

@@ -94,7 +94,7 @@ export function startParentContexts(lifeCycle, session) {
         referrer: currentView.referrer,
         url: currentView.location.href,
         host: currentView.location.host,
-        path: currentView.location.path
+        path: currentView.location.pathname
       }
     }
   }

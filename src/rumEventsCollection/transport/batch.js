@@ -29,7 +29,7 @@ function makeRumBatch(configuration, lifeCycle) {
 
   function createRumBatch(endpointUrl, unloadCallback) {
     return new Batch(
-      new HttpRequest(endpointUrl, configuration.batchBytesLimit, true),
+      new HttpRequest(endpointUrl, configuration.batchBytesLimit),
       configuration.maxBatchSize,
       configuration.batchBytesLimit,
       configuration.maxMessageSize,

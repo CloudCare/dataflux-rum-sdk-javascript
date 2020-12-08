@@ -22,6 +22,7 @@ export function startRumSession(configuration, lifeCycle) {
 
   return {
     getId: session.getId,
+    getAnonymousID: session.getAnonymousID,
     isTracked: function () {
       return (
         session.getId() !== undefined && isTracked(session.getTrackingType())

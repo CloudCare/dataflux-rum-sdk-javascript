@@ -35,16 +35,18 @@ export function startRumAssembly(
             sdkVersion: configuration.sdkVersion,
             service: configuration.service,
             env: configuration.env,
-            version: configuration.version,
-            tags: configuration.tags
+            version: configuration.version
           },
+          tags: configuration.tags,
           application: {
             id: applicationId
           },
           device: {},
           date: new Date().getTime(),
           user: {
-            originId: session.getId()
+            originId: session.getId(),
+            user_id: configuration.user_id || session.getAnonymousID(),
+            is_signin: configuration.user_id ? 'T' : 'F'
           },
           session: {
             // must be computed on each event because synthetics instrumentation can be done after sdk execution

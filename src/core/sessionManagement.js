@@ -13,10 +13,20 @@ import {
 } from '../helper/tools'
 import { DOM_EVENT } from '../helper/enums'
 
-export var SESSION_COOKIE_NAME = '_dd_s'
+export var SESSION_COOKIE_NAME = '_dataflux_s'
 export var SESSION_EXPIRATION_DELAY = 15 * ONE_MINUTE
 export var SESSION_TIME_OUT_DELAY = 4 * ONE_HOUR
 export var VISIBILITY_CHECK_DELAY = ONE_MINUTE
+export var ANONYMOUS_ID_COOKIE_NAME = '_dataflulx_an_id'
+export var ANONYMOUS_ID_EXPIRATION = 60 * 24 * ONE_HOUR
+function cacheAnonymousID(options) {
+  var anonymousCookie = cacheCookieAccess(ANONYMOUS_ID_COOKIE_NAME, options)
+  var anonymouseId = anonymousCookie.get()
+  if (!anonymouseId) {
+    anonymousCookie.set(UUID(), ANONYMOUS_ID_EXPIRATION)
+  }
+  return anonymousCookie
+}
 /**
  * Limit access to cookie to avoid performance issues
  */
@@ -25,6 +35,7 @@ export function startSessionManagement(
   productKey,
   computeSessionState
 ) {
+  var anonymousCookie = cacheAnonymousID(options)
   var sessionCookie = cacheCookieAccess(SESSION_COOKIE_NAME, options)
   var renewObservable = new Observable()
   var currentSessionId = retrieveActiveSession(sessionCookie).id
@@ -56,6 +67,9 @@ export function startSessionManagement(
   trackVisibility(expandSession)
 
   return {
+    getAnonymousID: function () {
+      return anonymousCookie.get()
+    },
     getId: function () {
       return retrieveActiveSession(sessionCookie).id
     },
