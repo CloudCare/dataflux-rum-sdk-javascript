@@ -6,7 +6,8 @@ import {
   safeJSONParse,
   map,
   escapeRowData,
-  each
+  each,
+  isNumber
 } from '../helper/tools'
 import { DOM_EVENT } from '../helper/enums'
 import dataMap from './dataMap'
@@ -97,14 +98,14 @@ batch.prototype = {
         var tagsStr = []
         each(value.tags, function (value_path, _key) {
           var _value = findByPath(data, value_path)
-          if (_value) {
+          if (_value || isNumber(_value)) {
             tagsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
           }
         })
         if (data.tags.length) {
           // 自定义tag
           each(data.tags, function (_value, _key) {
-            if (_value) {
+            if (_value || isNumber(_value)) {
               tagsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
             }
           })
@@ -112,7 +113,7 @@ batch.prototype = {
         var fieldsStr = []
         each(value.fields, function (value_path, _key) {
           var _value = findByPath(data, value_path)
-          if (_value) {
+          if (_value || isNumber(_value)) {
             fieldsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
           }
         })
