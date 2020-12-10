@@ -9,7 +9,7 @@ import {
 } from '../../helper/tools'
 import { supportPerformanceTimingEvent } from '../performanceCollection'
 import { LifeCycleEventType } from '../../helper/lifeCycle'
-// import { trackEventCounts } from '../trackEventCounts'
+import { trackEventCounts } from '../trackEventCounts'
 import { waitIdlePageActivity } from '../trackPageActivities'
 import { trackTimings } from './trackTimings'
 
@@ -125,15 +125,15 @@ function newView(lifeCycle, initialLocation, loadingType, referrer, startTime) {
   )
   var cancelScheduleViewUpdate = scheduleViewUpdate.cancel
   // 数量暂时不收集
-  // var _trackEventCounts = trackEventCounts(
-  //   lifeCycle,
-  //   function (newEventCounts) {
-  //     console.log('====trackEventCounts=====')
-  //     eventCounts = newEventCounts
-  //     scheduleViewUpdate()
-  //   }
-  // )
-  // var stopEventCountsTracking = _trackEventCounts.stop
+  var _trackEventCounts = trackEventCounts(
+    lifeCycle,
+    function (newEventCounts) {
+      console.log('====trackEventCounts=====')
+      eventCounts = newEventCounts
+      scheduleViewUpdate()
+    }
+  )
+  var stopEventCountsTracking = _trackEventCounts.stop
   var _trackLoadingTime = trackLoadingTime(
     loadingType,
     function (newLoadingTime) {
@@ -186,7 +186,7 @@ function newView(lifeCycle, initialLocation, loadingType, referrer, startTime) {
     scheduleUpdate: scheduleViewUpdate,
     end: function () {
       endTime = performance.now()
-      // stopEventCountsTracking()
+      stopEventCountsTracking()
       stopActivityLoadingTimeTracking()
       stopCLSTracking()
     },

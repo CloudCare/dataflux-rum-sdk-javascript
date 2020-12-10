@@ -1555,7 +1555,7 @@ export function toSnakeCase(word) {
 
 export function escapeRowData(str) {
   if (!isString(str)) return str
-  var reg = /[\s="]/g
+  var reg = /[\s=,"]/g
   return String(str).replace(reg, function (word) {
     return '\\' + word
   })

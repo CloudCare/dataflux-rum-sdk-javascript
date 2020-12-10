@@ -15,7 +15,6 @@ export function startViewCollection(lifeCycle, configuration, location) {
 }
 function computePerformanceViewDetails(entry) {
   var validEntry = toValidEntry(entry)
-
   if (!validEntry) {
     return undefined
   }
@@ -66,9 +65,9 @@ function processViewUpdate(view) {
       domComplete: msToNs(view.timings.domComplete),
       domContentLoaded: msToNs(view.timings.domContentLoaded),
       domInteractive: msToNs(view.timings.domInteractive),
-      // error: {
-      //   count: view.eventCounts.errorCount
-      // },
+      error: {
+        count: view.eventCounts.errorCount
+      },
       firstContentfulPaint: msToNs(view.timings.firstContentfulPaint),
       // firstInputDelay: msToNs(view.timings.firstInputDelay),
       loadEventEnd: msToNs(view.timings.loadEventEnd),

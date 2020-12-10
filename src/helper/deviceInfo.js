@@ -553,5 +553,6 @@ export default {
   osVersion: MethodLibrary.getOSVersion(),
   browser: MethodLibrary.getBrowserInfo().browser,
   browserVersion: MethodLibrary.getBrowserInfo().browserVersion,
-  screenSize: window.screen.width + '*' + window.screen.height
+  screenSize: window.screen.width + '*' + window.screen.height,
+  networkType: MethodLibrary.getNetwork()
 }

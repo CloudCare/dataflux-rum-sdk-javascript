@@ -98,6 +98,7 @@ function processResourceEntry(entry) {
         url: entry.name,
         urlHost: urlObj.Host,
         urlPath: urlObj.Path,
+        method: 'GET',
         status: 200,
         statusGroup: getStatusGroup(200)
       },

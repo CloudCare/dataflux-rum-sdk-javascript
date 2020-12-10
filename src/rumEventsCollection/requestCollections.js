@@ -31,14 +31,24 @@ export function trackXhr(lifeCycle, configuration, tracer) {
         xhr.getResponseHeader('content-type') &&
         xhr.getResponseHeader('content-type').split(';').length > 1 &&
         xhr.getResponseHeader('content-type').split(';')
+      var connection = '',
+        server = ''
+      try {
+        connection = xhr.getResponseHeader('connection')
+        server = xhr.getResponseHeader('server')
+      } catch (err) {
+        connection = ''
+        console.log(1111111111111111)
+      }
+
       lifeCycle.notify(LifeCycleEventType.REQUEST_COMPLETED, {
         duration: context.duration,
         method: context.method,
         requestIndex: context.requestIndex,
         response: context.response,
+        responseConnection: connection,
+        responseServer: server,
         responseHeader: xhr.getAllResponseHeaders().replace(/[\n\r]/g, ' '),
-        responseConnection: xhr.getResponseHeader('connection'),
-        responseServer: xhr.getResponseHeader('server'),
         responseContentType: (contentTypes && contentTypes[0]) || '',
         responseContentEncoding:
           (contentTypes && contentTypes[1].replace(/(^\s*)|(\s*$)/g, '')) || '',
@@ -80,6 +90,12 @@ export function trackFetch(lifeCycle, configuration, tracer) {
   fetchProxy.onRequestComplete(function (context) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.clearTracingIfCancelled(context)
+      var connection = '',
+        server = ''
+      try {
+        connection = context.headers && context.headers.get('connection')
+        server = context.headers && context.headers.get('server')
+      } catch (err) {}
       lifeCycle.notify(LifeCycleEventType.REQUEST_COMPLETED, {
         duration: context.duration,
         method: context.method,
@@ -87,9 +103,9 @@ export function trackFetch(lifeCycle, configuration, tracer) {
         response: context.response,
         responseType: context.responseType,
         responseHeader: getAllFetchResponseHeaders(context.headers),
-        responseConnection:
-          context.headers && context.headers.get('connection'),
-        responseServer: context.headers && context.headers.get('server'),
+        responseConnection: connection,
+        //   context.headers && context.headers.get('connection'),
+        responseServer: server,
         responseContentType:
           (context.headers && context.headers.get('content-type')) || '',
         responseContentEncoding:

@@ -1,4 +1,5 @@
 import { RumEventType } from '../helper/enums'
+// 需要用双引号将字符串类型的field value括起来， 这里有数组标示[string, path]
 export default {
   rum_web_page_performance: {
     type: RumEventType.VIEW,
@@ -6,7 +7,7 @@ export default {
       app_id: 'application.id',
       env: '_dd.env',
       version: '_dd.version',
-      sdk_name: '_dd.skd_name',
+      sdk_name: '_dd.sdk_name',
       sdk_version: '_dd.sdk_version',
       is_signin: 'user.is_signin',
       os: 'device.os',
@@ -15,14 +16,15 @@ export default {
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
       page_host: 'page.host',
-      page_apdex_level: 'page.apdex_level'
+      page_apdex_level: 'page.apdex_level',
+      network_type: 'device.network_type'
     },
     fields: {
       page_fmp: 'page.fmp',
       page_fpt: 'page.fpt',
       page_tti: 'page.tti',
       page_dom_ready: 'page.dom_ready',
-      page_load: 'page.load',
+      page_js_error_count: 'page.error.count',
       page_dom: 'page.dom',
       page_resource_load_time: 'page.resource_load_time'
     }
@@ -33,7 +35,7 @@ export default {
       app_id: 'application.id',
       env: '_dd.env',
       version: '_dd.version',
-      sdk_name: '_dd.skd_name',
+      sdk_name: '_dd.sdk_name',
       sdk_version: '_dd.sdk_version',
       is_signin: 'user.is_signin',
       os: 'device.os',
@@ -41,9 +43,10 @@ export default {
       browser: 'device.browser',
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
+      network_type: 'device.network_type',
       page_host: 'page.host',
       resource_status_group: 'resource.status_group',
-      resource_url: 'resource.url',
+      // resource_url: 'resource.url',
       resource_url_host: 'resource.url_host',
       resource_url_path: 'resource.url_path',
       resource_type: 'resource.type',
@@ -71,14 +74,15 @@ export default {
       app_id: 'application.id',
       env: '_dd.env',
       version: '_dd.version',
-      sdk_name: '_dd.skd_name',
+      sdk_name: '_dd.sdk_name',
       sdk_version: '_dd.sdk_version',
-      is_signin: 'user.origin_id',
+      is_signin: 'user.is_signin',
       os: 'device.os',
       os_version: 'device.os_version',
       browser: 'device.browser',
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
+      network_type: 'device.network_type',
       origin_id: 'user.origin_id',
       user_id: 'user.user_id',
       error_name: 'error.name',
@@ -91,8 +95,8 @@ export default {
     },
     fields: {
       error_starttime: 'error.starttime',
-      error_message: 'error.message',
-      error_stack: 'error.stack'
+      error_message: ['string', 'error.message'],
+      error_stack: ['string', 'error.stack']
     }
   },
   page: {
@@ -101,7 +105,7 @@ export default {
       app_id: 'application.id',
       env: '_dd.env',
       version: '_dd.version',
-      sdk_name: '_dd.skd_name',
+      sdk_name: '_dd.sdk_name',
       sdk_version: '_dd.sdk_version',
       is_signin: 'user.is_signin',
       os: 'device.os',
@@ -109,6 +113,7 @@ export default {
       browser: 'device.browser',
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
+      network_type: 'device.network_type',
       origin_id: 'user.origin_id',
       user_id: 'user.user_id',
       page_id: 'page.id',
@@ -125,7 +130,8 @@ export default {
       page_dom_ready: 'page.dom_ready',
       page_load: 'page.load',
       page_dom: 'page.dom',
-      page_resource_load_time: 'page.resource_load_time'
+      page_resource_load_time: 'page.resource_load_time',
+      page_js_error_count: 'page.error.count'
     }
   },
   resource: {
@@ -134,7 +140,7 @@ export default {
       app_id: 'application.id',
       env: '_dd.env',
       version: '_dd.version',
-      sdk_name: '_dd.skd_name',
+      sdk_name: '_dd.sdk_name',
       sdk_version: '_dd.sdk_version',
       is_signin: 'user.is_signin',
       os: 'device.os',
@@ -147,8 +153,6 @@ export default {
       page_id: 'page.id',
       page_host: 'page.host',
       page_path: 'page.path',
-      page_url: 'page.url',
-      page_referer: 'page.referer',
       resource_url: 'resource.url',
       resource_url_host: 'resource.url_host',
       resource_url_path: 'resource.url_path',
@@ -170,8 +174,10 @@ export default {
       resource_ttfb: 'resource.ttfb',
       resource_trans: 'resource.trans',
       resource_firstbyte: 'resource.firstbyte',
-      request_header: 'request.header',
-      response_header: 'response.header'
+      request_header: ['string', 'request.header'],
+      response_header: ['string', 'response.header'],
+      page_url: ['string', 'page.url'],
+      page_referer: ['string', 'page.referer']
     }
   }
 }

@@ -4,7 +4,7 @@ const webConfig = {
   entry: './src/index.js',
   devServer: {
     contentBase: path.join(__dirname, 'demo'),
-    port: 9000,
+    port: 8111,
     hot: true
   }
 }

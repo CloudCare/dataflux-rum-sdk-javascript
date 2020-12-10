@@ -16,17 +16,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --open --mode=development",
     "build": "rm -rf dist && webpack --config webpack.config.js --mode=production && npm run replace-build-env dist",
+    "publish:npm": "npm run build && npm publish .",
     "replace-build-env": "node scripts/replace-build-env.js"
   },
+  "keywords": [
+    "dataflux",
+    "rum",
+    "sdk"
+  ],
   "repository": {
-    "type": "git",
-    "url": "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/dataflux-rum-sdk-javscript.git"
+    "url": "https://github.com/CloudCare/dataflux-rum-sdk-javascript",
+    "type": "git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "dengchangliang23@gmail.com",
+  "license": "MIT",
+  "homepage": "https://github.com/CloudCare/dataflux-rum-sdk-javascript/blob/main/README.md",
   "description": "",
-  "dependencies": {
-    
-  }
+  "dependencies": {}
 }

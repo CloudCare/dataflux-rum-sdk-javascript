@@ -7,7 +7,9 @@ import {
   map,
   escapeRowData,
   each,
-  isNumber
+  isNumber,
+  isArray,
+  isString
 } from '../helper/tools'
 import { DOM_EVENT } from '../helper/enums'
 import dataMap from './dataMap'
@@ -82,13 +84,18 @@ batch.prototype = {
   },
   batchProcessSendData: function (messages) {
     var _this = this
-    return map(messages, function (message) {
-      return _this.processSendData(message)
+    var mes = []
+
+    each(messages, function (message) {
+      var data = _this.processSendData(message)
+      if (data) {
+        mes.push(data)
+      }
     })
+    return mes
   },
   processSendData: function (message) {
     var data = safeJSONParse(message)
-    console.log(data, 'message')
     if (!data || !data.type) return []
     var rowsStr = []
     each(dataMap, function (value, key) {
@@ -111,10 +118,23 @@ batch.prototype = {
           })
         }
         var fieldsStr = []
-        each(value.fields, function (value_path, _key) {
-          var _value = findByPath(data, value_path)
-          if (_value || isNumber(_value)) {
-            fieldsStr.push(escapeRowData(_key) + '=' + escapeRowData(_value))
+        each(value.fields, function (_value, _key) {
+          if (isArray(_value) && _value.length === 2) {
+            var type = _value[0],
+              value_path = _value[1]
+            var _valueData = findByPath(data, value_path)
+            if (_valueData || isNumber(_valueData)) {
+              _valueData = escapeRowData(_valueData)
+              _valueData =
+                type === 'string' ? '"' + _valueData + '"' : _valueData
+              fieldsStr.push(escapeRowData(_key) + '=' + _valueData)
+            }
+          } else if (isString(_value)) {
+            var _valueData = findByPath(data, _value)
+            if (_valueData || isNumber(_valueData)) {
+              _valueData = escapeRowData(_valueData)
+              fieldsStr.push(escapeRowData(_key) + '=' + _valueData)
+            }
           }
         })
         if (tagsStr.length) {
@@ -125,10 +145,16 @@ batch.prototype = {
           rowStr += fieldsStr.join(',')
         }
         rowStr = rowStr + ' ' + data.date
-        rowsStr.push(rowStr)
+        if (fieldsStr.length) {
+          rowsStr.push(rowStr)
+        }
       }
     })
-    return rowsStr.join('\n')
+    if (rowsStr.length) {
+      return rowsStr.join('\n')
+    } else {
+      return ''
+    }
   },
   sizeInBytes: function (candidate) {
     // Accurate byte size computations can degrade performances when there is a lot of events to process
