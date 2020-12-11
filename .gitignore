@@ -1,5 +1,7 @@
 demo
-dist
+cjs
+bundle
+esm
 node_modules
 .vscode
 scripts/publish-oss.js
