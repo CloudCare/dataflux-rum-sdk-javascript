@@ -1345,7 +1345,7 @@ export function jsonStringify(value, replacer, space) {
   var result
   try {
     result = JSON.stringify(value, undefined, space)
-  } catch {
+  } catch (e) {
     result = '<error: unable to serialize object>'
   } finally {
     if (originalToJSON[0]) {

@@ -15,7 +15,7 @@ DataFlux RUM 能够通过收集各个应用的指标数据，以可视化的方�
 ### NPM
 
 ```javascript
-import { datafluxRum } from '@dataflux/browser-rum'
+import { datafluxRum } from '@cloudcare/browser-rum'
 
 datafluxRum.init({
   applicationId: '<DATAFLUX_APPLICATION_ID>',

@@ -8,9 +8,9 @@ import {
 import { createContextManager, isPercentage } from '../helper/tools'
 import { startRum } from './rum'
 import { buildCookieOptions } from '../core/configuration'
-export var _datafluxRum = makeRumGlobal(startRum)
+export var datafluxRum = makeRumGlobal(startRum)
 
-defineGlobal(getGlobalObject(), 'DATAFLUX_RUM', _datafluxRum)
+defineGlobal(getGlobalObject(), 'DATAFLUX_RUM', datafluxRum)
 export function makeRumGlobal(startRumImpl) {
   var isAlreadyInitialized = false
   var globalContextManager = createContextManager()

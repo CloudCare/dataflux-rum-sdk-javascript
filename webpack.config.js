@@ -17,6 +17,6 @@ module.exports = (env, args) => ({
     path:
       args.mode === 'development'
         ? path.resolve(__dirname, 'demo')
-        : path.resolve(__dirname, 'dist')
+        : path.resolve(__dirname, 'bundle')
   }
 })

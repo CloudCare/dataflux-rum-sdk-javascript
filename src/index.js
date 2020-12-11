@@ -1,3 +1,2 @@
-import { _datafluxRum } from './boot/rum.entry'
-
-export var datafluxRum = _datafluxRum
+import { datafluxRum } from './boot/rum.entry'
+export { datafluxRum }

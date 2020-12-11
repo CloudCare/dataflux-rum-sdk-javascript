@@ -7,7 +7,7 @@ export function normalizeUrl(url) {
 export function isValidUrl(url) {
   try {
     return !!buildUrl(url)
-  } catch {
+  } catch (e) {
     return false
   }
 }
@@ -62,7 +62,7 @@ function checkURLSupported() {
     var url = new URL('http://test/path')
     isURLSupported = url.href === 'http://test/path'
     return isURLSupported
-  } catch {
+  } catch (e) {
     isURLSupported = false
   }
   return isURLSupported
