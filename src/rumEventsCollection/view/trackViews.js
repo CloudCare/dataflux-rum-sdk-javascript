@@ -128,7 +128,6 @@ function newView(lifeCycle, initialLocation, loadingType, referrer, startTime) {
   var _trackEventCounts = trackEventCounts(
     lifeCycle,
     function (newEventCounts) {
-      console.log('====trackEventCounts=====')
       eventCounts = newEventCounts
       scheduleViewUpdate()
     }
@@ -137,7 +136,6 @@ function newView(lifeCycle, initialLocation, loadingType, referrer, startTime) {
   var _trackLoadingTime = trackLoadingTime(
     loadingType,
     function (newLoadingTime) {
-      console.log('====trackLoadingTime=====')
       loadingTime = newLoadingTime
       scheduleViewUpdate()
     }
@@ -262,7 +260,6 @@ function trackLoadingTime(loadType, callback) {
       }
     },
     setActivityLoadingTime: function (activityLoadingTime) {
-      console.log('====trackActivityLoadingTime=====')
       if (isWaitingForActivityLoadingTime) {
         isWaitingForActivityLoadingTime = false
         if (activityLoadingTime !== undefined) {

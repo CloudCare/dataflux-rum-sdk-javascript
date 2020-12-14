@@ -13,7 +13,8 @@ import {
   computePerformanceResourceDuration,
   computeResourceKind,
   computeSize,
-  isRequestKind
+  isRequestKind,
+  is304
 } from './resourceUtils'
 
 export function startResourceCollection(lifeCycle, configuration, session) {
@@ -82,7 +83,7 @@ function processRequest(request) {
     tracingInfo,
     correspondingTimingOverrides
   )
-  return { startTime, rawRumEvent: resourceEvent }
+  return { startTime: startTime, rawRumEvent: resourceEvent }
 }
 
 function processResourceEntry(entry) {
@@ -90,6 +91,10 @@ function processResourceEntry(entry) {
   var entryMetrics = computePerformanceEntryMetricsV2(entry)
   var tracingInfo = computeEntryTracingInfo(entry)
   var urlObj = urlParse(entry.name).getParse()
+  var statusCode = ''
+  if (is304(entry)) {
+    statusCode = 304
+  }
   var resourceEvent = extend2Lev(
     {
       date: getTimestamp(entry.startTime),
@@ -99,8 +104,8 @@ function processResourceEntry(entry) {
         urlHost: urlObj.Host,
         urlPath: urlObj.Path,
         method: 'GET',
-        status: 200,
-        statusGroup: getStatusGroup(200)
+        status: statusCode,
+        statusGroup: getStatusGroup(statusCode)
       },
       type: RumEventType.RESOURCE
     },

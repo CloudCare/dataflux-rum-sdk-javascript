@@ -13,6 +13,24 @@ export function startRequestCollection(lifeCycle, configuration) {
   trackFetch(lifeCycle, configuration, tracer)
 }
 
+function matchResponseHeaderByName(headers, name) {
+  // getResponseHeader会有跨域问题，所以用该方法匹配
+  var reg = new RegExp(name + ':(.*)[\n\r]*', 'i')
+  var matchs = headers.match(reg)
+  if (matchs && matchs.length > 1) {
+    return matchs[1].replace(/\s*/g, '')
+  }
+  return ''
+}
+function matchContentEncoding(endcoding) {
+  if (!endcoding) return ''
+  var reg = /charset=(.*)/
+  var matchs = endcoding.match(reg)
+  if (matchs && matchs.length > 1) {
+    return matchs[1].replace(/\s*/g, '')
+  }
+  return ''
+}
 export function trackXhr(lifeCycle, configuration, tracer) {
   var xhrProxy = startXhrProxy()
   xhrProxy.beforeSend(function (context, xhr) {
@@ -27,20 +45,14 @@ export function trackXhr(lifeCycle, configuration, tracer) {
   xhrProxy.onRequestComplete(function (context, xhr) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.clearTracingIfCancelled(context)
-      var contentTypes =
-        xhr.getResponseHeader('content-type') &&
-        xhr.getResponseHeader('content-type').split(';').length > 1 &&
-        xhr.getResponseHeader('content-type').split(';')
-      var connection = '',
-        server = ''
-      try {
-        connection = xhr.getResponseHeader('connection')
-        server = xhr.getResponseHeader('server')
-      } catch (err) {
-        connection = ''
-        console.log(1111111111111111)
-      }
-
+      var headers = xhr.getAllResponseHeaders()
+      var contentTypes = matchResponseHeaderByName(headers, 'content-type')
+      contentTypes =
+        contentTypes &&
+        contentTypes.split(';').length > 1 &&
+        contentTypes.split(';')
+      var connection = matchResponseHeaderByName(headers, 'connection'),
+        server = matchResponseHeaderByName(headers, 'server')
       lifeCycle.notify(LifeCycleEventType.REQUEST_COMPLETED, {
         duration: context.duration,
         method: context.method,
@@ -48,10 +60,9 @@ export function trackXhr(lifeCycle, configuration, tracer) {
         response: context.response,
         responseConnection: connection,
         responseServer: server,
-        responseHeader: xhr.getAllResponseHeaders().replace(/[\n\r]/g, ' '),
+        responseHeader: headers.replace(/[\n\r]/g, ' '),
         responseContentType: (contentTypes && contentTypes[0]) || '',
-        responseContentEncoding:
-          (contentTypes && contentTypes[1].replace(/(^\s*)|(\s*$)/g, '')) || '',
+        responseContentEncoding: matchContentEncoding(contentTypes[1]),
         spanId: context.spanId,
         startTime: context.startTime,
         status: context.status,
@@ -65,7 +76,6 @@ export function trackXhr(lifeCycle, configuration, tracer) {
 }
 function getAllFetchResponseHeaders(headers) {
   if (!headers || !(headers instanceof Headers)) return ''
-
   var headerArry = []
   var entries = headers.entries()
   var next = entries.next()
@@ -73,8 +83,9 @@ function getAllFetchResponseHeaders(headers) {
     headerArry.push(next.value.join(':'))
     next = entries.next()
   }
-  return headerArry.join(' ')
+  return headerArry.join(/\r\n/)
 }
+
 export function trackFetch(lifeCycle, configuration, tracer) {
   var fetchProxy = startFetchProxy()
   fetchProxy.beforeSend(function (context) {
@@ -90,26 +101,22 @@ export function trackFetch(lifeCycle, configuration, tracer) {
   fetchProxy.onRequestComplete(function (context) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.clearTracingIfCancelled(context)
-      var connection = '',
-        server = ''
-      try {
-        connection = context.headers && context.headers.get('connection')
-        server = context.headers && context.headers.get('server')
-      } catch (err) {}
+      var headers = getAllFetchResponseHeaders(context.headers)
+      var connection = matchResponseHeaderByName(headers, 'connection'),
+        server = matchResponseHeaderByName(headers, 'server')
       lifeCycle.notify(LifeCycleEventType.REQUEST_COMPLETED, {
         duration: context.duration,
         method: context.method,
         requestIndex: context.requestIndex,
         response: context.response,
         responseType: context.responseType,
-        responseHeader: getAllFetchResponseHeaders(context.headers),
+        responseHeader: headers.replace(/[\n\r]/g, ' '),
         responseConnection: connection,
-        //   context.headers && context.headers.get('connection'),
         responseServer: server,
-        responseContentType:
-          (context.headers && context.headers.get('content-type')) || '',
-        responseContentEncoding:
-          (context.headers && context.headers.get('content-encode')) || '',
+        responseContentType: matchResponseHeaderByName(headers, 'content-type'),
+        responseContentEncoding: matchContentEncoding(
+          matchResponseHeaderByName(headers, 'content-encode')
+        ),
         spanId: context.spanId,
         startTime: context.startTime,
         status: context.status,

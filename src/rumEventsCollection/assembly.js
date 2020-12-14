@@ -33,7 +33,6 @@ export function startRumAssembly(
           _dd: {
             sdkName: configuration.sdkName,
             sdkVersion: configuration.sdkVersion,
-            service: configuration.service,
             env: configuration.env,
             version: configuration.version
           },

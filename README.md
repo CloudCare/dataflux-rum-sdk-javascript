@@ -20,7 +20,6 @@ import { datafluxRum } from '@cloudcare/browser-rum'
 datafluxRum.init({
   applicationId: '<DATAFLUX_APPLICATION_ID>',
   datawayUrl: '<DATAWAYURL>'
-  //  service: 'my-web-application',
   //  env: 'production',
   //  version: '1.0.0',
 })
@@ -53,7 +52,6 @@ datafluxRum.init({
     DATAFLUX_RUM.init({
       applicationId: '<DATAFLUX_APPLICATION_ID>',
       datawayUrl: '<DATAWAYURL>'
-      //  service: 'my-web-application',
       //  env: 'production',
       //  version: '1.0.0',
     })
@@ -73,7 +71,6 @@ datafluxRum.init({
     window.DATAFLUX_RUM.init({
       applicationId: '<DATAFLUX_APPLICATION_ID>',
       datawayUrl: '<DATAWAYURL>'
-      //  service: 'my-web-application',
       //  env: 'production',
       //  version: '1.0.0',
     })
@@ -88,7 +85,6 @@ datafluxRum.init({
 | ------------------------------ | ------- | -------- | ------- | --------------------------------------------------------------------------------------------------------- |
 | `applicationId`                | String  | 是       |         | 从 dataflux 创建的应用 ID                                                                                 |
 | `datawayUrl`                   | String  | 是       |         | datakit 数据上报地址                                                                                      |
-| `service`                      | String  | 否       |         | web 应用的名称                                                                                            |
 | `env`                          | String  | 否       |         | web 应用当前环境， 如 prod：线上环境；gray：灰度环境；pre：预发布环境 common：日常环境；local：本地环境； |
 | `version`                      | String  | 否       |         | web 应用的版本号                                                                                          |
 | `resourceSampleRate`           | Number  | 否       | `100`   | 资源指标数据收集百分比: `100`表示全收集，`0`表示不收集                                                    |

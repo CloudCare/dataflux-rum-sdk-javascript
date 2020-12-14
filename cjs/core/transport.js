@@ -72,7 +72,6 @@ batch.prototype = {
   flush: function flush() {
     if (this.bufferMessageCount !== 0) {
       var messages = this.pushOnlyBuffer.concat((0, _tools.values)(this.upsertBuffer));
-      messages = this.batchProcessSendData(messages);
       this.request.send(messages.join('\n'), this.bufferBytesSize);
       this.pushOnlyBuffer = [];
       this.upsertBuffer = {};
@@ -80,39 +79,37 @@ batch.prototype = {
       this.bufferMessageCount = 0;
     }
   },
-  batchProcessSendData: function batchProcessSendData(messages) {
-    var _this = this;
-
-    var mes = [];
-    (0, _tools.each)(messages, function (message) {
-      var data = _this.processSendData(message);
-
-      if (data) {
-        mes.push(data);
-      }
-    });
-    return mes;
-  },
+  // batchProcessSendData: function (messages) {
+  //   var _this = this
+  //   var mes = []
+  //   each(messages, function (message) {
+  //     var data = _this.processSendData(message)
+  //     if (data) {
+  //       mes.push(data)
+  //     }
+  //   })
+  //   return mes
+  // },
   processSendData: function processSendData(message) {
-    var data = (0, _tools.safeJSONParse)(message);
-    if (!data || !data.type) return [];
+    // var data = safeJSONParse(message)
+    if (!message || !message.type) return '';
     var rowsStr = [];
     (0, _tools.each)(_dataMap["default"], function (value, key) {
-      if (value.type === data.type) {
+      if (value.type === message.type) {
         var rowStr = '';
         rowStr += key + ',';
         var tagsStr = [];
         (0, _tools.each)(value.tags, function (value_path, _key) {
-          var _value = (0, _tools.findByPath)(data, value_path);
+          var _value = (0, _tools.findByPath)(message, value_path);
 
           if (_value || (0, _tools.isNumber)(_value)) {
             tagsStr.push((0, _tools.escapeRowData)(_key) + '=' + (0, _tools.escapeRowData)(_value));
           }
         });
 
-        if (data.tags.length) {
+        if (message.tags.length) {
           // 自定义tag
-          (0, _tools.each)(data.tags, function (_value, _key) {
+          (0, _tools.each)(message.tags, function (_value, _key) {
             if (_value || (0, _tools.isNumber)(_value)) {
               tagsStr.push((0, _tools.escapeRowData)(_key) + '=' + (0, _tools.escapeRowData)(_value));
             }
@@ -125,7 +122,7 @@ batch.prototype = {
             var type = _value[0],
                 value_path = _value[1];
 
-            var _valueData = (0, _tools.findByPath)(data, value_path);
+            var _valueData = (0, _tools.findByPath)(message, value_path);
 
             if (_valueData || (0, _tools.isNumber)(_valueData)) {
               _valueData = (0, _tools.escapeRowData)(_valueData);
@@ -133,7 +130,7 @@ batch.prototype = {
               fieldsStr.push((0, _tools.escapeRowData)(_key) + '=' + _valueData);
             }
           } else if ((0, _tools.isString)(_value)) {
-            var _valueData = (0, _tools.findByPath)(data, _value);
+            var _valueData = (0, _tools.findByPath)(message, _value);
 
             if (_valueData || (0, _tools.isNumber)(_valueData)) {
               _valueData = (0, _tools.escapeRowData)(_valueData);
@@ -151,7 +148,7 @@ batch.prototype = {
           rowStr += fieldsStr.join(',');
         }
 
-        rowStr = rowStr + ' ' + data.date;
+        rowStr = rowStr + ' ' + message.date;
 
         if (fieldsStr.length) {
           rowsStr.push(rowStr);
@@ -179,6 +176,7 @@ batch.prototype = {
   },
   addOrUpdate: function addOrUpdate(message, key) {
     var process = this.process(message);
+    if (!process.processedMessage || process.processedMessage === '') return;
 
     if (process.messageBytesSize >= this.maxMessageSize) {
       console.warn('Discarded a message whose size was bigger than the maximum allowed size' + this.maxMessageSize + 'KB.');
@@ -200,7 +198,7 @@ batch.prototype = {
     }
   },
   process: function process(message) {
-    var processedMessage = (0, _tools.jsonStringify)(message);
+    var processedMessage = this.processSendData(message);
     var messageBytesSize = this.sizeInBytes(processedMessage);
     return {
       processedMessage: processedMessage,

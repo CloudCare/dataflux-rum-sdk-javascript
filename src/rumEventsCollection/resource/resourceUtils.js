@@ -109,6 +109,18 @@ export function computePerformanceResourceDuration(entry) {
 
   return msToNs(entry.duration)
 }
+export function is304(entry) {
+  if (
+    entry.encodedBodySize > 0 &&
+    entry.transferSize > 0 &&
+    entry.transferSize < entry.encodedBodySize
+  ) {
+    return true
+  }
+
+  // unknown
+  return null
+}
 //  interface PerformanceResourceDetails {
 //   redirect?: PerformanceResourceDetailsElement
 //   dns?: PerformanceResourceDetailsElement
@@ -197,7 +209,6 @@ export function computePerformanceResourceDetails(entry) {
     trans: formatTiming(startTime, responseStart, responseEnd),
     ttfb: formatTiming(startTime, requestStart, responseStart)
   }
-
   // Make sure a connection occurred
   if (connectEnd !== fetchStart) {
     details.tcp = formatTiming(startTime, connectStart, connectEnd)

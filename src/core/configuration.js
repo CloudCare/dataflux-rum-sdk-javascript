@@ -44,7 +44,6 @@ export function commonInit(userConfiguration, buildEnv) {
     sdkVersion: buildEnv.sdkVersion,
     sdkName: buildEnv.sdkName,
     datawayUrl: getDataWayUrl(userConfiguration.datawayUrl),
-    service: userConfiguration.service || '',
     tags: userConfiguration.tags || [],
     cookieOptions: buildCookieOptions(userConfiguration)
   }
