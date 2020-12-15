@@ -112,7 +112,6 @@ function newView(lifeCycle, initialLocation, loadingType, referrer, startTime) {
   var cancelScheduleViewUpdate = scheduleViewUpdate.cancel; // 数量暂时不收集
 
   var _trackEventCounts = (0, _trackEventCounts2.trackEventCounts)(lifeCycle, function (newEventCounts) {
-    console.log('====trackEventCounts=====');
     eventCounts = newEventCounts;
     scheduleViewUpdate();
   });
@@ -120,7 +119,6 @@ function newView(lifeCycle, initialLocation, loadingType, referrer, startTime) {
   var stopEventCountsTracking = _trackEventCounts.stop;
 
   var _trackLoadingTime = trackLoadingTime(loadingType, function (newLoadingTime) {
-    console.log('====trackLoadingTime=====');
     loadingTime = newLoadingTime;
     scheduleViewUpdate();
   });
@@ -243,8 +241,6 @@ function trackLoadingTime(loadType, callback) {
       }
     },
     setActivityLoadingTime: function setActivityLoadingTime(activityLoadingTime) {
-      console.log('====trackActivityLoadingTime=====');
-
       if (isWaitingForActivityLoadingTime) {
         isWaitingForActivityLoadingTime = false;
 

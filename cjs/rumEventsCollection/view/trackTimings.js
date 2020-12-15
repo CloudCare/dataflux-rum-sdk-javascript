@@ -18,7 +18,6 @@ var _lifeCycle = require("../../helper/lifeCycle");
 var _trackFirstHidden = require("./trackFirstHidden");
 
 function trackTimings(lifeCycle, callback) {
-  console.log('========trackTimings========');
   var timings = {};
 
   function setTimings(newTimings) {
@@ -62,7 +61,6 @@ function trackTimings(lifeCycle, callback) {
 }
 
 function trackNavigationTimings(lifeCycle, callback) {
-  console.log('====trackNavigationTimings=====');
   var subscribe = lifeCycle.subscribe(_lifeCycle.LifeCycleEventType.PERFORMANCE_ENTRY_COLLECTED, function (entry) {
     if (entry.entryType === 'navigation') {
       callback({

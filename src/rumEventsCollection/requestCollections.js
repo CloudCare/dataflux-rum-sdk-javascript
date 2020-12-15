@@ -49,7 +49,7 @@ export function trackXhr(lifeCycle, configuration, tracer) {
       var contentTypes = matchResponseHeaderByName(headers, 'content-type')
       contentTypes =
         contentTypes &&
-        contentTypes.split(';').length > 1 &&
+        contentTypes.split(';').length > 0 &&
         contentTypes.split(';')
       var connection = matchResponseHeaderByName(headers, 'connection'),
         server = matchResponseHeaderByName(headers, 'server')
@@ -62,7 +62,9 @@ export function trackXhr(lifeCycle, configuration, tracer) {
         responseServer: server,
         responseHeader: headers.replace(/[\n\r]/g, ' '),
         responseContentType: (contentTypes && contentTypes[0]) || '',
-        responseContentEncoding: matchContentEncoding(contentTypes[1]),
+        responseContentEncoding: matchContentEncoding(
+          contentTypes && contentTypes[1]
+        ),
         spanId: context.spanId,
         startTime: context.startTime,
         status: context.status,
@@ -92,7 +94,6 @@ export function trackFetch(lifeCycle, configuration, tracer) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.traceFetch(context)
       context.requestIndex = getNextRequestIndex()
-
       lifeCycle.notify(LifeCycleEventType.REQUEST_STARTED, {
         requestIndex: context.requestIndex
       })

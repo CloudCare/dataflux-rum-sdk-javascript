@@ -21,7 +21,7 @@ export function startRumBatch(configuration, lifeCycle) {
 }
 
 function makeRumBatch(configuration, lifeCycle) {
-  var primaryBatch = createRumBatch(configuration.datawayUrl, function () {
+  var primaryBatch = createRumBatch(configuration.datakitUrl, function () {
     lifeCycle.notify(LifeCycleEventType.BEFORE_UNLOAD);
   });
 

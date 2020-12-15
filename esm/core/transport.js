@@ -1,4 +1,4 @@
-import { jsonStringify, addEventListener, values, findByPath, safeJSONParse, map, escapeRowData, each, isNumber, isArray, isString } from '../helper/tools';
+import { addEventListener, values, findByPath, escapeRowData, each, isNumber, isArray, isString } from '../helper/tools';
 import { DOM_EVENT } from '../helper/enums';
 import dataMap from './dataMap'; // https://en.wikipedia.org/wiki/UTF-8
 
@@ -66,17 +66,6 @@ batch.prototype = {
       this.bufferMessageCount = 0;
     }
   },
-  // batchProcessSendData: function (messages) {
-  //   var _this = this
-  //   var mes = []
-  //   each(messages, function (message) {
-  //     var data = _this.processSendData(message)
-  //     if (data) {
-  //       mes.push(data)
-  //     }
-  //   })
-  //   return mes
-  // },
   processSendData: function processSendData(message) {
     // var data = safeJSONParse(message)
     if (!message || !message.type) return '';

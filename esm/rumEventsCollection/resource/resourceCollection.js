@@ -2,7 +2,7 @@ import { msToNs, getTimestamp, UUID, extend2Lev, urlParse } from '../../helper/t
 import { RequestType, ResourceType, RumEventType } from '../../helper/enums';
 import { LifeCycleEventType } from '../../helper/lifeCycle';
 import { matchRequestTiming } from './matchRequestTiming';
-import { computePerformanceResourceDetails, computePerformanceResourceDuration, computeResourceKind, computeSize, isRequestKind } from './resourceUtils';
+import { computePerformanceResourceDetails, computePerformanceResourceDuration, computeResourceKind, computeSize, isRequestKind, is304 } from './resourceUtils';
 export function startResourceCollection(lifeCycle, configuration, session) {
   lifeCycle.subscribe(LifeCycleEventType.REQUEST_COMPLETED, function (request) {
     if (session.isTrackedWithResource()) {
@@ -48,7 +48,7 @@ function processRequest(request) {
     type: RumEventType.RESOURCE
   }, tracingInfo, correspondingTimingOverrides);
   return {
-    startTime,
+    startTime: startTime,
     rawRumEvent: resourceEvent
   };
 }
@@ -58,6 +58,12 @@ function processResourceEntry(entry) {
   var entryMetrics = computePerformanceEntryMetricsV2(entry);
   var tracingInfo = computeEntryTracingInfo(entry);
   var urlObj = urlParse(entry.name).getParse();
+  var statusCode = '';
+
+  if (is304(entry)) {
+    statusCode = 304;
+  }
+
   var resourceEvent = extend2Lev({
     date: getTimestamp(entry.startTime),
     resource: {
@@ -66,8 +72,8 @@ function processResourceEntry(entry) {
       urlHost: urlObj.Host,
       urlPath: urlObj.Path,
       method: 'GET',
-      status: 200,
-      statusGroup: getStatusGroup(200)
+      status: statusCode,
+      statusGroup: getStatusGroup(statusCode)
     },
     type: RumEventType.RESOURCE
   }, tracingInfo, entryMetrics);

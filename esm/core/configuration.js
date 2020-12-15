@@ -18,7 +18,7 @@ export var DEFAULT_CONFIGURATION = {
    * ensure that we leave room for logs, rum and potential other users
    */
   batchBytesLimit: 16 * ONE_KILO_BYTE,
-  datawayUrl: '',
+  datakitUrl: '',
   allowedTracingOrigins: []
 };
 export function buildCookieOptions(userConfiguration) {
@@ -33,7 +33,7 @@ export function buildCookieOptions(userConfiguration) {
   return cookieOptions;
 }
 
-function getDataWayUrl(url) {
+function getDatakitUrlUrl(url) {
   if (url.lastIndexOf('/') === url.length - 1) return url + 'v1/write/rum';
   return url + '/v1/write/rum';
 }
@@ -45,8 +45,7 @@ export function commonInit(userConfiguration, buildEnv) {
     version: userConfiguration.version || '',
     sdkVersion: buildEnv.sdkVersion,
     sdkName: buildEnv.sdkName,
-    datawayUrl: getDataWayUrl(userConfiguration.datawayUrl),
-    service: userConfiguration.service || '',
+    datakitUrl: getDatakitUrlUrl(userConfiguration.datakitUrl),
     tags: userConfiguration.tags || [],
     cookieOptions: buildCookieOptions(userConfiguration)
   };
@@ -58,5 +57,5 @@ function mustUseSecureCookie(userConfiguration) {
 }
 
 export function isIntakeRequest(url, configuration) {
-  return haveSameOrigin(url, configuration.datawayUrl);
+  return haveSameOrigin(url, configuration.datakitUrl);
 }

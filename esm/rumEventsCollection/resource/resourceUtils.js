@@ -65,6 +65,14 @@ export function computePerformanceResourceDuration(entry) {
   }
 
   return msToNs(entry.duration);
+}
+export function is304(entry) {
+  if (entry.encodedBodySize > 0 && entry.transferSize > 0 && entry.transferSize < entry.encodedBodySize) {
+    return true;
+  } // unknown
+
+
+  return null;
 } //  interface PerformanceResourceDetails {
 //   redirect?: PerformanceResourceDetailsElement
 //   dns?: PerformanceResourceDetailsElement

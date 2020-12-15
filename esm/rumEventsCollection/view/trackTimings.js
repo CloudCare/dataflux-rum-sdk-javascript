@@ -3,7 +3,6 @@ import { addEventListeners, extend } from '../../helper/tools';
 import { LifeCycleEventType } from '../../helper/lifeCycle';
 import { trackFirstHidden } from './trackFirstHidden';
 export function trackTimings(lifeCycle, callback) {
-  console.log('========trackTimings========');
   var timings = {};
 
   function setTimings(newTimings) {
@@ -46,7 +45,6 @@ export function trackTimings(lifeCycle, callback) {
   };
 }
 export function trackNavigationTimings(lifeCycle, callback) {
-  console.log('====trackNavigationTimings=====');
   var subscribe = lifeCycle.subscribe(LifeCycleEventType.PERFORMANCE_ENTRY_COLLECTED, function (entry) {
     if (entry.entryType === 'navigation') {
       callback({

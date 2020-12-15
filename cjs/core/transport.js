@@ -79,17 +79,6 @@ batch.prototype = {
       this.bufferMessageCount = 0;
     }
   },
-  // batchProcessSendData: function (messages) {
-  //   var _this = this
-  //   var mes = []
-  //   each(messages, function (message) {
-  //     var data = _this.processSendData(message)
-  //     if (data) {
-  //       mes.push(data)
-  //     }
-  //   })
-  //   return mes
-  // },
   processSendData: function processSendData(message) {
     // var data = safeJSONParse(message)
     if (!message || !message.type) return '';

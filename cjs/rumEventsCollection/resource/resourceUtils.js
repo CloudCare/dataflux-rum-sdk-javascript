@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.computeResourceKind = computeResourceKind;
 exports.isRequestKind = isRequestKind;
 exports.computePerformanceResourceDuration = computePerformanceResourceDuration;
+exports.is304 = is304;
 exports.computePerformanceResourceDetails = computePerformanceResourceDetails;
 exports.toValidEntry = toValidEntry;
 exports.computeSize = computeSize;
@@ -86,6 +87,15 @@ function computePerformanceResourceDuration(entry) {
   }
 
   return (0, _tools.msToNs)(entry.duration);
+}
+
+function is304(entry) {
+  if (entry.encodedBodySize > 0 && entry.transferSize > 0 && entry.transferSize < entry.encodedBodySize) {
+    return true;
+  } // unknown
+
+
+  return null;
 } //  interface PerformanceResourceDetails {
 //   redirect?: PerformanceResourceDetailsElement
 //   dns?: PerformanceResourceDetailsElement

@@ -70,6 +70,12 @@ function processResourceEntry(entry) {
   var entryMetrics = computePerformanceEntryMetricsV2(entry);
   var tracingInfo = computeEntryTracingInfo(entry);
   var urlObj = (0, _tools.urlParse)(entry.name).getParse();
+  var statusCode = '';
+
+  if ((0, _resourceUtils.is304)(entry)) {
+    statusCode = 304;
+  }
+
   var resourceEvent = (0, _tools.extend2Lev)({
     date: (0, _tools.getTimestamp)(entry.startTime),
     resource: {
@@ -78,8 +84,8 @@ function processResourceEntry(entry) {
       urlHost: urlObj.Host,
       urlPath: urlObj.Path,
       method: 'GET',
-      status: 200,
-      statusGroup: getStatusGroup(200)
+      status: statusCode,
+      statusGroup: getStatusGroup(statusCode)
     },
     type: _enums.RumEventType.RESOURCE
   }, tracingInfo, entryMetrics);
