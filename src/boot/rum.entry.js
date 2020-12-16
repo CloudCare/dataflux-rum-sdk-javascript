@@ -52,9 +52,9 @@ export function makeRumGlobal(startRumImpl) {
       )
       return false
     }
-    if (!userConfiguration.datawayUrl) {
+    if (!userConfiguration.datakitUrl) {
       console.error(
-        'datawayUrl is not configured, no RUM data will be collected.'
+        'datakitUrl is not configured, no RUM data will be collected.'
       )
       return false
     }

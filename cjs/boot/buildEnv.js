@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.buildEnv = void 0;
 var buildEnv = {
-  sdkVersion: '1.1.1',
+  sdkVersion: '1.1.4',
   sdkName: 'Web SDK'
 };
 exports.buildEnv = buildEnv;

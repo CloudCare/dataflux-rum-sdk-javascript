@@ -101,8 +101,7 @@ batch.prototype = {
             var _valueData = findByPath(message, value_path);
 
             if (_valueData || isNumber(_valueData)) {
-              _valueData = escapeRowData(_valueData);
-              _valueData = type === 'string' ? '"' + _valueData + '"' : _valueData;
+              _valueData = type === 'string' ? '"' + _valueData.replace(/"/g, '\\"') + '"' : escapeRowData(_valueData);
               fieldsStr.push(escapeRowData(_key) + '=' + _valueData);
             }
           } else if (isString(_value)) {

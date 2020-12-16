@@ -176,7 +176,7 @@ export var inherit = function inherit(subclass, superclass) {
 
   F.prototype = superclass.prototype;
   subclass.prototype = new F();
-  subclass.prototype.varructor = subclass;
+  subclass.prototype.constructor = subclass;
   subclass.superclass = superclass.prototype;
   return subclass;
 };
