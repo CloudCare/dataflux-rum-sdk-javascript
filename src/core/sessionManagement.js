@@ -131,7 +131,6 @@ export function persistSession(session, cookie) {
   }
   session.expire = String(Date.now() + SESSION_EXPIRATION_DELAY)
   var cookieArray = []
-  var ars = objectEntries(session)
   each(objectEntries(session), function (item) {
     cookieArray.push(item[0] + '=' + item[1])
   })

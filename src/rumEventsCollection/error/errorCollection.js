@@ -1,9 +1,7 @@
 import { startAutomaticErrorCollection } from '../../core/errorCollection'
-import { extend2Lev, getTimestamp } from '../../helper/tools'
+import { getTimestamp } from '../../helper/tools'
 import { RumEventType } from '../../helper/enums'
 import { LifeCycleEventType } from '../../helper/lifeCycle'
-import { formatUnknownError } from '../../helper/errorTools'
-import { computeStackTrace } from '../../helper/tracekit'
 
 export function startErrorCollection(lifeCycle, configuration) {
   return doStartErrorCollection(
@@ -35,7 +33,7 @@ function processError(error) {
     },
     type: RumEventType.ERROR
   }
-
+  console.log(rawRumEvent, 'rawRumEvent')
   return {
     rawRumEvent: rawRumEvent,
     startTime: error.startTime

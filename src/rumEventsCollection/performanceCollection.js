@@ -46,7 +46,7 @@ export function startPerformanceCollection(lifeCycle, configuration) {
       'layout-shift'
     ]
 
-    observer.observe({ entryTypes })
+    observer.observe({ entryTypes: entryTypes })
 
     if (supportPerformanceObject() && 'addEventListener' in performance) {
       // https://bugzilla.mozilla.org/show_bug.cgi?id=1559377
