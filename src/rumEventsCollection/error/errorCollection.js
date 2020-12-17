@@ -33,7 +33,6 @@ function processError(error) {
     },
     type: RumEventType.ERROR
   }
-  console.log(rawRumEvent, 'rawRumEvent')
   return {
     rawRumEvent: rawRumEvent,
     startTime: error.startTime
