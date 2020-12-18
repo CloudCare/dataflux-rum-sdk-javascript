@@ -8,6 +8,11 @@ var VariableLibrary = {
       'Chrome',
       'Edge',
       'IE',
+      'IE 11',
+      'IE 10',
+      'IE 9',
+      'IE 8',
+      'IE 7',
       'Firefox',
       'Firefox Focus',
       'Chromium',
@@ -51,6 +56,20 @@ var VariableLibrary = {
     ],
     os: [
       'Windows',
+      'Windows 2000',
+      'Windows XP',
+      'Windows Vista',
+      'Windows 7',
+      'Windows 8',
+      'Windows 8.1',
+      'Windows Server 2003',
+      'Windows ME',
+      'Windows 10',
+      'Windows 98',
+      'Windows 95',
+      'Windows NT 4.0',
+      'Windows CE',
+      'Windows 3.11',
       'Linux',
       'Mac OS',
       'Android',
@@ -82,6 +101,11 @@ var MethodLibrary = {
       Safari: u.indexOf('Safari') > -1,
       Chrome: u.indexOf('Chrome') > -1 || u.indexOf('CriOS') > -1,
       IE: u.indexOf('MSIE') > -1 || u.indexOf('Trident') > -1,
+      'IE 11': u.indexOf('Trident') > -1 && u.indexOf('rv:11.0') > -1,
+      'IE 10': u.indexOf('MSIE 10.0') > -1 && u.indexOf('Trident') > -1,
+      'IE 9': u.indexOf('MSIE 9.0') > -1 && u.indexOf('Trident') > -1,
+      'IE 8': u.indexOf('MSIE 9.0') > -1 && u.indexOf('Trident') > -1,
+      'IE 7': u.indexOf('MSIE 7.0') > -1 && u.indexOf('Trident') > -1,
       Edge: u.indexOf('Edge') > -1,
       Firefox: u.indexOf('Firefox') > -1 || u.indexOf('FxiOS') > -1,
       'Firefox Focus': u.indexOf('Focus') > -1,
@@ -124,6 +148,33 @@ var MethodLibrary = {
       iQiYi: u.indexOf('IqiyiApp') > -1,
       // 系统或平台
       Windows: u.indexOf('Windows') > -1,
+      'Windows 2000':
+        u.indexOf('Windows NT 5.0') > -1 || u.indexOf('Windows 2000') > -1,
+      'Windows XP':
+        u.indexOf('Windows NT 5.1') > -1 || u.indexOf('Windows XP') > -1,
+      'Windows Server 2003': u.indexOf('Windows NT 5.2') > -1,
+      'Windows Vista': u.indexOf('Windows NT 6.0') > -1,
+      'Windows 7':
+        u.indexOf('Windows 7') > -1 || u.indexOf('Windows NT 6.1') > -1,
+      'Windows 8':
+        u.indexOf('Windows 8') > -1 || u.indexOf('Windows NT 6.2') > -1,
+      'Windows 8.1':
+        u.indexOf('Windows 8.1') > -1 || u.indexOf('Windows NT 6.3') > -1,
+      'Windows ME':
+        u.indexOf('Win 9x 4.90') > -1 || u.indexOf('Windows ME') > -1,
+      'Windows 10':
+        u.indexOf('Windows 10.0') > -1 || u.indexOf('Windows NT 10.0') > -1,
+      'Windows 98': u.indexOf('Windows 98') > -1 || u.indexOf('Win98') > -1,
+      'Windows 95':
+        u.indexOf('Windows 95') > -1 ||
+        u.indexOf('Win95') > -1 ||
+        u.indexOf('Windows_95') > -1,
+      'Windows NT 4.0':
+        u.indexOf('Windows NT 4.0') > -1 ||
+        u.indexOf('WinNT4.0') > -1 ||
+        u.indexOf('WinNT') > -1,
+      'Windows CE': u.indexOf('Windows CE') > -1,
+      'Windows 3.11': u.indexOf('Win16') > -1,
       Linux: u.indexOf('Linux') > -1 || u.indexOf('X11') > -1,
       'Mac OS': u.indexOf('Macintosh') > -1,
       Android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,
@@ -164,7 +215,7 @@ var MethodLibrary = {
   getOS: function () {
     var _this = this
     MethodLibrary.matchInfoMap(_this)
-    return _this.os
+    return _this.os || 'Unknown'
   },
   // 获取操作系统版本
   getOSVersion: function () {
