@@ -52,9 +52,9 @@ export function makeRumGlobal(startRumImpl) {
       )
       return false
     }
-    if (!userConfiguration.datakitHost) {
+    if (!userConfiguration.datakitUrl && !userConfiguration.datakitOrigin) {
       console.error(
-        'datakitHost is not configured, no RUM data will be collected.'
+        'datakitOrigin is not configured, no RUM data will be collected.'
       )
       return false
     }
