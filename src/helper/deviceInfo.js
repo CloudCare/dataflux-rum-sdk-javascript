@@ -106,7 +106,7 @@ var MethodLibrary = {
       'IE 9': u.indexOf('MSIE 9.0') > -1 && u.indexOf('Trident') > -1,
       'IE 8': u.indexOf('MSIE 9.0') > -1 && u.indexOf('Trident') > -1,
       'IE 7': u.indexOf('MSIE 7.0') > -1 && u.indexOf('Trident') > -1,
-      Edge: u.indexOf('Edge') > -1,
+      Edge: u.indexOf('Edg') > -1 || u.indexOf('Edge') > -1,
       Firefox: u.indexOf('Firefox') > -1 || u.indexOf('FxiOS') > -1,
       'Firefox Focus': u.indexOf('Focus') > -1,
       Chromium: u.indexOf('Chromium') > -1,
