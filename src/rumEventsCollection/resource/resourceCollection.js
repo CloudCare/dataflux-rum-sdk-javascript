@@ -14,7 +14,8 @@ import {
   computeResourceKind,
   computeSize,
   isRequestKind,
-  is304
+  is304,
+  isCacheHit
 } from './resourceUtils'
 
 export function startResourceCollection(lifeCycle, configuration, session) {
@@ -94,6 +95,8 @@ function processResourceEntry(entry) {
   var statusCode = ''
   if (is304(entry)) {
     statusCode = 304
+  } else if (isCacheHit(entry)) {
+    statusCode = '200 cache'
   }
   var resourceEvent = extend2Lev(
     {

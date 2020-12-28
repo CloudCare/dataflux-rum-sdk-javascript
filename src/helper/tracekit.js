@@ -5,6 +5,7 @@ function has(object, key) {
 function isUndefined(what) {
   return typeof what === 'undefined'
 }
+var UNKNOWN_FUNCTION = '?'
 export function wrap(func) {
   var _this = this
   function wrapped() {

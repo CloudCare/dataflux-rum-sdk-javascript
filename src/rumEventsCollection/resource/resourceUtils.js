@@ -121,6 +121,19 @@ export function is304(entry) {
   // unknown
   return null
 }
+export function isCacheHit(entry) {
+  // if we transferred bytes, it must not be a cache hit
+  // (will return false for 304 Not Modified)
+  if (entry.transferSize > 0) return false
+
+  // if the body size is non-zero, it must mean this is a
+  // ResourceTiming2 browser, this was same-origin or TAO,
+  // and transferSize was 0, so it was in the cache
+  if (entry.decodedBodySize > 0) return true
+
+  // fall back to duration checking (non-RT2 or cross-origin)
+  return entry.duration < 30
+}
 //  interface PerformanceResourceDetails {
 //   redirect?: PerformanceResourceDetailsElement
 //   dns?: PerformanceResourceDetailsElement

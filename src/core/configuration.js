@@ -11,6 +11,10 @@ export var DEFAULT_CONFIGURATION = {
    */
   maxBatchSize: 50,
   maxMessageSize: 256 * ONE_KILO_BYTE,
+   /**
+   * arbitrary value, byte precision not needed
+   */
+  requestErrorResponseLengthLimit: 32 * ONE_KILO_BYTE,
 
   /**
    * beacon payload max queue size implementation is 64kb
