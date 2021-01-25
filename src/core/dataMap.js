@@ -84,7 +84,7 @@ export default {
       page_host: 'page.host',
       page_path: 'page.path',
       page_url: 'page.url',
-      page_referer: 'page.referer'
+      page_referer: 'page.referrer'
     },
     fields: {
       error_starttime: 'error.starttime',
@@ -112,7 +112,7 @@ export default {
       page_host: 'page.host',
       page_path: 'page.path',
       page_url: 'page.url',
-      page_referer: 'page.referer',
+      page_referer: 'page.referrer',
       page_apdex_level: 'page.apdex_level'
     },
     fields: {
@@ -169,7 +169,7 @@ export default {
       request_header: ['string', 'request.header'],
       response_header: ['string', 'response.header'],
       page_url: ['string', 'page.url'],
-      page_referer: ['string', 'page.referer']
+      page_referer: ['string', 'page.referrer']
     }
   }
 }
