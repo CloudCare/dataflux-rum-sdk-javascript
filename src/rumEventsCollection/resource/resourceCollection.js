@@ -96,7 +96,7 @@ function processResourceEntry(entry) {
   if (is304(entry)) {
     statusCode = 304
   } else if (isCacheHit(entry)) {
-    statusCode = '200 cache'
+    statusCode = 200
   }
   var resourceEvent = extend2Lev(
     {

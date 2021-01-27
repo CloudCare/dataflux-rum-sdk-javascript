@@ -81,15 +81,15 @@ datafluxRum.init({
 
 ### 初始化参数
 
-| 参数                           | 类型    | 是否必须 | 默认值  | 描述                                                                                                      |
-| ------------------------------ | ------- | -------- | ------- | --------------------------------------------------------------------------------------------------------- |
-| `applicationId`                | String  | 是       |         | 从 dataflux 创建的应用 ID                                                                                 |
-| `datakitOrigin`                | String  | 是       |         | datakit 数据上报 Origin                                                                                   |
-| `env`                          | String  | 否       |         | web 应用当前环境， 如 prod：线上环境；gray：灰度环境；pre：预发布环境 common：日常环境；local：本地环境； |
-| `version`                      | String  | 否       |         | web 应用的版本号                                                                                          |
-| `resourceSampleRate`           | Number  | 否       | `100`   | 资源指标数据收集百分比: `100`表示全收集，`0`表示不收集                                                    |
-| `sampleRate`                   | Number  | 否       | `100`   | 指标数据收集百分比: `100`表示全收集，`0`表示不收集                                                        |
-| `trackSessionAcrossSubdomains` | Boolean | 否       | `false` | 同一个域名下面的子域名共享缓存                                                                            |
+| 参数                           | 类型    | 是否必须 | 默认值  | 描述                                                                                                                              |
+| ------------------------------ | ------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `applicationId`                | String  | 是       |         | 从 dataflux 创建的应用 ID                                                                                                         |
+| `datakitOrigin`                | String  | 是       |         | datakit 数据上报 Origin 注释: `协议（包括：//），域名（或IP地址）和端口号` 例如：https://www.datakit.com, http://100.20.34.3:8088 |
+| `env`                          | String  | 否       |         | web 应用当前环境， 如 prod：线上环境；gray：灰度环境；pre：预发布环境 common：日常环境；local：本地环境；                         |
+| `version`                      | String  | 否       |         | web 应用的版本号                                                                                                                  |
+| `resourceSampleRate`           | Number  | 否       | `100`   | 资源指标数据收集百分比: `100`表示全收集，`0`表示不收集                                                                            |
+| `sampleRate`                   | Number  | 否       | `100`   | 指标数据收集百分比: `100`表示全收集，`0`表示不收集                                                                                |
+| `trackSessionAcrossSubdomains` | Boolean | 否       | `false` | 同一个域名下面的子域名共享缓存                                                                                                    |
 
 ## 问题
 
