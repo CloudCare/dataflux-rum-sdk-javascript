@@ -140,6 +140,7 @@ export default {
       browser: 'device.browser',
       browser_version: 'device.browser_version',
       screen_size: 'device.screen_size',
+      network_type: 'device.network_type',
       origin_id: 'user.origin_id',
       userid: 'user.user_id',
       page_id: 'page.id',
