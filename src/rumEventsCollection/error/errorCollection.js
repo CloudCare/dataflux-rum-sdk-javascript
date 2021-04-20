@@ -21,7 +21,6 @@ export function doStartErrorCollection(lifeCycle, configuration, observable) {
 }
 
 function processError(error) {
-  console.log(error, 'errror')
   var rawRumEvent = {
     date: getTimestamp(error.startTime),
     error: {

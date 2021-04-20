@@ -58,6 +58,7 @@ export function trackXhr(lifeCycle, configuration, tracer) {
         method: context.method,
         requestIndex: context.requestIndex,
         response: context.response,
+        traceId: context.traceId,
         responseConnection: connection,
         responseServer: server,
         responseHeader: headers.replace(/[\n\r]/g, ' '),
@@ -68,7 +69,6 @@ export function trackXhr(lifeCycle, configuration, tracer) {
         spanId: context.spanId,
         startTime: context.startTime,
         status: context.status,
-        traceId: context.traceId,
         type: RequestType.XHR,
         url: context.url
       })

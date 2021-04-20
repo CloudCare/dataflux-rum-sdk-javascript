@@ -33,7 +33,7 @@ export function startParentContexts(lifeCycle, session) {
     function (currentContext) {
       // A view can be updated after its end.  We have to ensure that the view being updated is the
       // most recently created.
-      if (currentView.id === currentContext.id) {
+      if (currentView && currentView.id === currentContext.id) {
         currentView = currentContext
       }
     }

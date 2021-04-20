@@ -40,7 +40,7 @@ export function startTracer(configuration) {
         configuration,
         context,
         function (tracingHeaders) {
-          each(tracingHeaders, function (name, value) {
+          each(tracingHeaders, function (value, name) {
             xhr.setRequestHeader(name, value)
           })
         }
@@ -53,7 +53,6 @@ function injectHeadersIfTracingAllowed(configuration, context, inject) {
   if (!isTracingSupported() || !isAllowedUrl(configuration, context.url)) {
     return
   }
-
   context.traceId = new TraceIdentifier()
   context.spanId = new TraceIdentifier()
   inject(makeTracingHeaders(context.traceId, context.spanId))
@@ -62,7 +61,7 @@ function injectHeadersIfTracingAllowed(configuration, context, inject) {
 function isAllowedUrl(configuration, requestUrl) {
   var requestOrigin = getOrigin(requestUrl)
   var flag = false
-  each(configuration.allowedTracingOrigins, function (allowedOrigin) {
+  each(configuration.allowedDDTracingOrigins, function (allowedOrigin) {
     if (
       requestOrigin === allowedOrigin ||
       (allowedOrigin instanceof RegExp && allowedOrigin.test(requestOrigin))
@@ -84,11 +83,11 @@ function getCrypto() {
 
 function makeTracingHeaders(traceId, spanId) {
   return {
-    'x-dataflux-origin': 'rum',
-    'x-dataflux-parent-id': spanId.toDecimalString(),
-    'x-dataflux-sampled': '1',
-    'x-dataflux-sampling-priority': '1',
-    'x-dataflux-trace-id': traceId.toDecimalString()
+    'x-datadog-origin': 'rum',
+    'x-datadog-parent-id': spanId.toDecimalString(),
+    'x-datadog-sampled': '1',
+    'x-datadog-sampling-priority': '1',
+    'x-datadog-trace-id': traceId.toDecimalString()
   }
 }
 

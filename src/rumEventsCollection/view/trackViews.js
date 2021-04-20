@@ -76,15 +76,15 @@ export function trackViews(location, lifeCycle) {
   })
 
   // Session keep alive
-  var keepAliveInterval = window.setInterval(function () {
-    currentView.triggerUpdate()
-  }, SESSION_KEEP_ALIVE_INTERVAL)
+  // var keepAliveInterval = window.setInterval(function () {
+  //   currentView.triggerUpdate()
+  // }, SESSION_KEEP_ALIVE_INTERVAL)
 
   return {
     stop: function () {
       stopTimingsTracking()
       currentView.end()
-      clearInterval(keepAliveInterval)
+      // clearInterval(keepAliveInterval)
     }
   }
 }

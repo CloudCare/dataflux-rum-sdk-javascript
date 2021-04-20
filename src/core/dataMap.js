@@ -146,6 +146,7 @@ export default {
       page_id: 'page.id',
       page_host: 'page.host',
       page_path: 'page.path',
+      trace_id: 'resource.trace_id',
       resource_url: 'resource.url',
       resource_url_host: 'resource.url_host',
       resource_url_path: 'resource.url_path',

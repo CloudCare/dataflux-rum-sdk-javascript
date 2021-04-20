@@ -11,7 +11,7 @@ export var DEFAULT_CONFIGURATION = {
    */
   maxBatchSize: 50,
   maxMessageSize: 256 * ONE_KILO_BYTE,
-   /**
+  /**
    * arbitrary value, byte precision not needed
    */
   requestErrorResponseLengthLimit: 32 * ONE_KILO_BYTE,
@@ -22,7 +22,7 @@ export var DEFAULT_CONFIGURATION = {
    */
   batchBytesLimit: 16 * ONE_KILO_BYTE,
   datakitUrl: '',
-  allowedTracingOrigins: []
+  allowedDDTracingOrigins: [] //
 }
 export function buildCookieOptions(userConfiguration) {
   var cookieOptions = {}
@@ -50,6 +50,7 @@ export function commonInit(userConfiguration, buildEnv) {
     datakitUrl: getDatakitUrlUrl(
       userConfiguration.datakitUrl || userConfiguration.datakitOrigin
     ),
+    allowedDDTracingOrigins: userConfiguration.allowedDDTracingOrigins || [],
     tags: userConfiguration.tags || [],
     cookieOptions: buildCookieOptions(userConfiguration)
   }
