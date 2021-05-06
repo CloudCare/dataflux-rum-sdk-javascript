@@ -36,7 +36,9 @@ export function trackXhr(lifeCycle, configuration, tracer) {
   xhrProxy.beforeSend(function (context, xhr) {
     if (isAllowedRequestUrl(configuration, context.url)) {
       tracer.traceXhr(context, xhr)
+
       context.requestIndex = getNextRequestIndex()
+
       lifeCycle.notify(LifeCycleEventType.REQUEST_STARTED, {
         requestIndex: context.requestIndex
       })
@@ -53,6 +55,7 @@ export function trackXhr(lifeCycle, configuration, tracer) {
         contentTypes.split(';')
       var connection = matchResponseHeaderByName(headers, 'connection'),
         server = matchResponseHeaderByName(headers, 'server')
+
       lifeCycle.notify(LifeCycleEventType.REQUEST_COMPLETED, {
         duration: context.duration,
         method: context.method,

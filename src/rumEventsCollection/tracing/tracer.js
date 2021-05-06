@@ -93,11 +93,13 @@ function makeTracingHeaders(traceId, spanId) {
 
 /* tslint:disable:no-bitwise */
 export function TraceIdentifier() {
+  this.buffer = new Uint8Array(8)
   getCrypto().getRandomValues(this.buffer)
   this.buffer[0] = this.buffer[0] & 0x7f
 }
+
 TraceIdentifier.prototype = {
-  buffer: new Uint8Array(8),
+  // buffer: new Uint8Array(8),
   toString: function (radix) {
     var high = this.readInt32(0)
     var low = this.readInt32(4)
@@ -114,7 +116,6 @@ TraceIdentifier.prototype = {
         break
       }
     }
-
     return str
   },
   toDecimalString: function () {

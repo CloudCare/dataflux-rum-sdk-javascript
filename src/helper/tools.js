@@ -1397,6 +1397,19 @@ export function getRelativeTime(timestamp) {
 export function getTimestamp(relativeTime) {
   return Math.floor(getNavigationStart() + relativeTime)
 }
+export function relativeNow() {
+  return performance.now()
+}
+
+export function clocksNow() {
+  return { relative: relativeNow(), timeStamp: timeStampNow() }
+}
+export function timeStampNow() {
+  return Date.now()
+}
+export function elapsed(start, end) {
+  return end - start
+}
 
 /**
  * Navigation start slightly change on some rare cases

@@ -1,12 +1,12 @@
 import { normalizeUrl } from '../helper/urlPolyfill'
-import { each } from '../helper/tools'
+import { each, relativeNow, clocksNow, elapsed } from '../helper/tools'
 
 var xhrProxySingleton
 var beforeSendCallbacks = []
 var onRequestCompleteCallbacks = []
 var originalXhrOpen
 var originalXhrSend
-
+var originalXhrAbort
 export function startXhrProxy() {
   if (!xhrProxySingleton) {
     proxyXhr()
@@ -25,17 +25,18 @@ export function startXhrProxy() {
 export function resetXhrProxy() {
   if (xhrProxySingleton) {
     xhrProxySingleton = undefined
-    beforeSendCallbacks.splice(0, beforeSendCallbacks.length)
-    onRequestCompleteCallbacks.splice(0, onRequestCompleteCallbacks.length)
+    beforeSendCallbacks.length = 0
+    onRequestCompleteCallbacks.length = 0
     XMLHttpRequest.prototype.open = originalXhrOpen
     XMLHttpRequest.prototype.send = originalXhrSend
+    XMLHttpRequest.prototype.abort = originalXhrAbort
   }
 }
 
 function proxyXhr() {
   originalXhrOpen = XMLHttpRequest.prototype.open
   originalXhrSend = XMLHttpRequest.prototype.send
-
+  originalXhrAbort = XMLHttpRequest.prototype.abort
   XMLHttpRequest.prototype.open = function (method, url) {
     // WARN: since this data structure is tied to the instance, it is shared by both logs and rum
     // and can be used by different code versions depending on customer setup
@@ -50,18 +51,21 @@ function proxyXhr() {
 
   XMLHttpRequest.prototype.send = function (body) {
     var _this = this
-    if (_this._dataflux_xhr) {
-      _this._dataflux_xhr.startTime = performance.now()
+    if (this._dataflux_xhr) {
+      var xhrPendingContext = this._dataflux_xhr
+      xhrPendingContext.startTime = relativeNow()
+      xhrPendingContext.startClocks = clocksNow()
+      xhrPendingContext.isAborted = false
 
-      var originalOnreadystatechange = _this.onreadystatechange
+      var originalOnreadystatechange = this.onreadystatechange
 
-      _this.onreadystatechange = function () {
-        if (_this.readyState === XMLHttpRequest.DONE) {
+      this.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE) {
           reportXhr()
         }
 
         if (originalOnreadystatechange) {
-          originalOnreadystatechange.apply(_this, arguments)
+          originalOnreadystatechange.apply(this, arguments)
         }
       }
 
@@ -71,22 +75,32 @@ function proxyXhr() {
           return
         }
         hasBeenReported = true
+        var xhrCompleteContext = Object.assign({}, xhrPendingContext, {
+          duration: elapsed(
+            xhrPendingContext.startClocks.relative,
+            relativeNow()
+          ),
+          response: _this.response,
+          status: _this.status
+        })
 
-        _this._dataflux_xhr.duration =
-          performance.now() - _this._dataflux_xhr.startTime
-        _this._dataflux_xhr.response = _this.response
-        _this._dataflux_xhr.status = _this.status
         each(onRequestCompleteCallbacks, function (callback) {
-          callback(_this._dataflux_xhr, _this)
+          callback(xhrCompleteContext, _this)
         })
       }
 
       _this.addEventListener('loadend', reportXhr)
       each(beforeSendCallbacks, function (callback) {
-        callback(_this._dataflux_xhr, _this)
+        callback(xhrPendingContext, _this)
       })
     }
 
     return originalXhrSend.apply(_this, arguments)
+  }
+  XMLHttpRequest.prototype.abort = function () {
+    if (this._dataflux_xhr) {
+      this._dataflux_xhr.isAborted = true
+    }
+    return originalXhrAbort.apply(this, arguments)
   }
 }

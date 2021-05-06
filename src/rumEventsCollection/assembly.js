@@ -29,6 +29,7 @@ export function startRumAssembly(
       }
       if (session.isTracked() && viewContext && viewContext.session.id) {
         var actionContext = parentContexts.findActionV2(startTime)
+
         var rumContext = {
           _dd: {
             sdkName: configuration.sdkName,
@@ -64,6 +65,7 @@ export function startRumAssembly(
             )
           : extend2Lev(rumContext, deviceContext, viewContext, rawRumEvent)
         var serverRumEvent = withSnakeCaseKeys(rumEvent)
+
         serverRumEvent.context = extend2Lev(
           savedGlobalContext || getGlobalContext(),
           customerContext
